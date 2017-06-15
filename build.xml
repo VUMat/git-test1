@@ -21,7 +21,21 @@
     </copy>
   </target>
 
-  <target name="jar" depends="compile"
+ <target name="checkstyle" depends="compile" description="Create checkstyle_report" >
+<path id="checkstyle.lib.path">
+            <fileset dir="lib" includes="*.jar"/>
+  </path>
+  <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.lib.path"/>
+    <checkstyle config="checkstyle.xml"
+      failureProperty="checkstyle.failure"
+              failOnViolation="false">
+              <formatter type="xml" tofile="checkstyle_report.xml"/>
+      <fileset dir="src" includes="**/*.java"/>
+    </checkstyle>
+  </target>
+
+
+  <target name="jar" depends="checkstyle"
 	  description="Generate the jarfile.">
     <jar destfile="${jar}" basedir="${build.classes.dir}">
       <manifest>
@@ -31,28 +45,6 @@
     </jar>
   </target>
 
-  <target name="run" depends="jar" description="Run">
-    <java jar="${jar}" fork="true">
-      <jvmarg value="-server"/>
-    </java>
-  </target>
-
- <target name="checkstyle" depends="run">
-
-<path id="checkstyle.lib.path">
-            <fileset dir="lib" includes="*.jar"/>
-  </path>
-  <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.lib.path"/>
-
-    <checkstyle config="checkstyle.xml"
-      failureProperty="checkstyle.failure"
-              failOnViolation="false">
-              <formatter type="xml" tofile="checkstyle_report.xml"/>
-      <fileset dir="src" includes="**/*.java"/>
-
- 
-    </checkstyle>
-  </target>
 
   <target name="clean" description="Delete all gen files.">
     <delete dir="${build.dir}"/>
