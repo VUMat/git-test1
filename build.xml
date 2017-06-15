@@ -37,7 +37,7 @@
     </java>
   </target>
 
- <target name="checkstyle">
+ <target name="checkstyle" depends="run">
 
 <path id="checkstyle.lib.path">
             <fileset dir="lib" includes="*.jar"/>
@@ -53,7 +53,7 @@
  
     </checkstyle>
   </target>
-  
+
   <target name="clean" description="Delete all gen files.">
     <delete dir="${build.dir}"/>
     <delete file="${jar}"/>
