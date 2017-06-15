@@ -1,0 +1,44 @@
+<project name="sudoku" default="jar">
+  <property name="jar" value="${ant.project.name}.jar"/>
+  <property name="src.dir" value="src"/>
+  <!--///file:///git/ -->
+  <property name="build.dir" value="build"/>
+  <property name="build.classes.dir" value="${build.dir}/classes"/>
+
+  <target name="start">
+    <mkdir dir="${build.classes.dir}"/>
+  </target>
+
+  <target name="compile" depends="start"
+	  description="Compile all source files.">
+    <javac srcdir="${src.dir}" destdir="${build.classes.dir}"
+	   optimize="on" debug="on" deprecation="on"
+	   includeantruntime="false">
+      <compilerarg value="-Xlint"/> 
+    </javac>
+    <copy todir="${build.classes.dir}">
+      <fileset dir="${src.dir}" excludes="**/*.java"/>
+    </copy>
+  </target>
+
+  <target name="jar" depends="compile"
+	  description="Generate the jarfile.">
+    <jar destfile="${jar}" basedir="${build.classes.dir}">
+      <manifest>
+        <attribute name="Main-Class"
+		   value="com.nullprogram.sudoku.Sudoku"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run" depends="jar" description="Run">
+    <java jar="${jar}" fork="true">
+      <jvmarg value="-server"/>
+    </java>
+  </target>
+
+  <target name="clean" description="Delete all gen files.">
+    <delete dir="${build.dir}"/>
+    <delete file="${jar}"/>
+  </target>
+</project>
